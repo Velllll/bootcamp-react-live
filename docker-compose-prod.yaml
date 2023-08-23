@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  back:
+    build:
+      context: ./back2.0
+      target: production
+    tty: true
+    working_dir: /opt/server
+    volumes:
+      - ./back2.0:/opt/server
+      - /opt/server/node_modules/
+    env_file:
+      - .env
+    expose:
+      - "5050"
+    ports:
+      - "5555:5050"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    expose:
+      - "5432"
+    ports:
+      - "5333:5432"
+    restart: always
+
+  client:
+    container_name: minecite_client
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "8333:80"
+
+  redis:
+    container_name: redis_minecite
+    image: redis:6-alpine
+    restart: always
