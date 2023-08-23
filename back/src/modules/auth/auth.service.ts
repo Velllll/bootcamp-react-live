@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { User } from 'src/typeorm/entitys/user.entity';
+import { Roles, User, UserRole } from 'src/typeorm/entitys/user.entity';
 import { Repository } from 'typeorm';
 import { TokenService } from './token/token.service';
 import { Hash } from 'crypto';
@@ -17,17 +17,20 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @InjectRepository(Roles)
+    private readonly rolesRepo: Repository<Roles>,
+
     private readonly tokenService: TokenService,
   ) {}
 
   async register(login: string, name: string, password: string) {
-    const user = await this.usersRepository.findOne({
+    const isUserExist = await this.usersRepository.findOne({
       where: {
         login,
       },
     });
 
-    if (user) {
+    if (isUserExist) {
       throw new HttpException(
         'User with this login have already exist',
         HttpStatus.BAD_REQUEST,
@@ -43,15 +46,27 @@ export class AuthService {
       password: passwordHash,
     });
 
+    await this.rolesRepo.save({
+      user: newUser,
+      role: UserRole.USER,
+    });
+
     const tokens = await this.tokenService.generateTokens({
       login,
       userid: newUser.id,
     });
     await this.saveRefreshToken(tokens.refreshToken, newUser.id);
 
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: newUser.id,
+      },
+    });
+    const { refreshToken, password: pas, ...rest } = user;
+
     return {
       tokens,
-      user: newUser,
+      user: rest,
     };
   }
 

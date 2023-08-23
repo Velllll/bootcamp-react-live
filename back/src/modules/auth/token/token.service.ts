@@ -9,7 +9,7 @@ export class TokenService {
   async generateTokens(userPayload: { login: string; userid: number }) {
     return {
       accessToken: this.jwtService.sign(userPayload, {
-        expiresIn: '30d',
+        expiresIn: '3d',
         // secret: process.env.JWT_ACCESS_SECRET,
         secret: JWT_ACCESS_SECRET,
       }),

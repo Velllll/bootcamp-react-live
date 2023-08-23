@@ -6,7 +6,12 @@ import {
   OpenAccess,
   PrimaryLocation,
 } from './entitys/events.entity';
-import { User } from './entitys/user.entity';
+import {
+  FacultyList,
+  JobList,
+  ScienceCentreList,
+} from './entitys/lists.entity';
+import { Roles, User } from './entitys/user.entity';
 
 const entities = [
   Work,
@@ -16,6 +21,10 @@ const entities = [
   OpenAccess,
   PrimaryLocation,
   User,
+  Roles,
+  FacultyList,
+  JobList,
+  ScienceCentreList,
 ];
 
 export default entities;

@@ -25,7 +25,9 @@ export class AuthGuard implements CanActivate {
     try {
       const authHeader = req.headers.authorization;
 
-      if (!authHeader) return true;
+      if (!authHeader) {
+        throw new UnauthorizedException();
+      }
 
       const token = authHeader.split(' ')[1];
 
@@ -39,13 +41,13 @@ export class AuthGuard implements CanActivate {
       });
 
       const { refreshToken, ...info } = userInDb;
-      req.user = info as Omit<User, 'refreshToken'>;
+      req.user = {
+        login: userInDb.login,
+        id: userInDb.id,
+      };
       return true;
     } catch (e) {
-      if (e.message === 'jwt expired') {
-        throw new UnauthorizedException('Token expired');
-      }
-      return true;
+      throw new UnauthorizedException();
     }
   }
 }

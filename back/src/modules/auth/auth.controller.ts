@@ -13,7 +13,6 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dtos/login.dto';
 import { Request, Response } from 'express';
-import { AccessGuard } from 'src/guards/access/access.guard';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 export const REFRESH_TOKEN_NAME = 'Unna32pqign734fO6';
@@ -99,12 +98,5 @@ export class AuthController {
       accessToken: userData.tokens.accessToken,
       userData: userData.user,
     };
-  }
-
-  @Get('access')
-  @UseGuards(AccessGuard)
-  @UseGuards(AuthGuard)
-  async access(@Req() request) {
-    return request.user;
   }
 }
