@@ -13,6 +13,7 @@ import {
 import { Queries } from './dtos/works-query.interface';
 import { UserService } from '../user/user.service';
 import { User, UserRole } from 'src/typeorm/entitys/user.entity';
+import { UpdateWorkDto } from './dtos/update.dto';
 
 @Injectable()
 export class WorksService {
@@ -159,5 +160,55 @@ export class WorksService {
       works,
       meta,
     };
+  }
+
+  async updateWork(body: UpdateWorkDto, userid: number) {
+    const user = await this.userService.getUser({ id: userid });
+
+    const work = await this.worksRepository.findOne({
+      where: {
+        workid: body.workid,
+      },
+      relations: {
+        primaryLocation: true,
+        authorships: true,
+        biblio: true,
+        concepts: true,
+        openAccess: true,
+      },
+    });
+
+    if (!work) {
+      throw new HttpException('Work not found', 404);
+    }
+
+    if (body.hIndex !== undefined) {
+      work.hIndex = body.hIndex;
+    }
+
+    if (
+      body.hidden !== undefined &&
+      user.role.some((r) => [UserRole.MODERATOR].indexOf(r.role) !== -1)
+    ) {
+      throw new HttpException(
+        'You do not have permission to change vision',
+        403,
+      );
+    }
+
+    if (
+      body.hidden !== undefined &&
+      user.role.some((r) => [UserRole.ADMIN].indexOf(r.role) !== -1)
+    ) {
+      work.hidden = body.hidden;
+    }
+
+    if (body.displayName) {
+      work.displayName = body.displayName;
+    }
+
+    await this.worksRepository.save(work);
+
+    return work;
   }
 }
