@@ -10,28 +10,24 @@ export class TokenService {
     return {
       accessToken: this.jwtService.sign(userPayload, {
         expiresIn: '3d',
-        // secret: process.env.JWT_ACCESS_SECRET,
-        secret: JWT_ACCESS_SECRET,
+        secret: process.env.JWT_ACCESS_SECRET,
       }),
       refreshToken: this.jwtService.sign(userPayload, {
         expiresIn: '10d',
-        // secret: process.env.JWT_REFRESH_SECRET,
-        secret: JWT_REFRESH_SECRET,
+        secret: process.env.JWT_REFRESH_SECRET,
       }),
     };
   }
 
   async verifyRefreshToken(token: string) {
     return this.jwtService.verify(token, {
-      // secret: process.env.JWT_REFRESH_SECRET,
-      secret: JWT_REFRESH_SECRET,
+      secret: process.env.JWT_REFRESH_SECRET,
     });
   }
 
   async verifyAccessToken(token: string) {
     return this.jwtService.verify(token, {
-      // secret: process.env.JWT_ACCESS_SECRET,
-      secret: JWT_ACCESS_SECRET,
+      secret: process.env.JWT_ACCESS_SECRET,
     });
   }
 }

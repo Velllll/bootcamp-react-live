@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Work } from 'src/typeorm/entitys/events.entity';
 import {
@@ -8,27 +8,22 @@ import {
   ILike,
   In,
   Like,
-  MoreThan,
   Repository,
 } from 'typeorm';
 import { Queries } from './dtos/works-query.interface';
-import { HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
-import { OpenAlexService } from '../download-works-modules/open-alex/open-alex.service';
-import { EditAuthorDto } from './dtos/edit-authors.dto';
-import { Authorships } from 'src/typeorm/entitys/events.entity';
-import { EditVisibilityDto } from './dtos/edit-visibility.dto';
-import { ResultsOpenAlex } from 'src/interfaces/open-alex-event.interface';
-import { ScimagojrService } from '../download-works-modules/scimagojr/scimagojr.service';
+import { UserService } from '../user/user.service';
+import { User, UserRole } from 'src/typeorm/entitys/user.entity';
 
 @Injectable()
 export class WorksService {
   constructor(
     @InjectRepository(Work)
     private readonly worksRepository: Repository<Work>,
+
+    private userService: UserService,
   ) {}
 
-  async getAllWorks(queries: Queries) {
+  async getAllWorks(queries: Queries, userid: number) {
     if (!queries.page) queries.page = 1;
     if (!queries.limit) queries.limit = 10;
 
@@ -73,6 +68,16 @@ export class WorksService {
       where.hIndex = ILike(`%${queries.hIndex}%`);
     }
 
+    if (
+      (queries.dateFromYear && !queries.dateToYear) ||
+      (!queries.dateFromYear && queries.dateToYear)
+    ) {
+      throw new HttpException(
+        'dateFromYear and dateToYear must be both or none',
+        400,
+      );
+    }
+
     if (queries.dateFromYear && queries.dateToYear) {
       where.publication_date = Between(
         new Date(`${queries.dateFromYear}-01-01`),
@@ -84,6 +89,19 @@ export class WorksService {
       where.openAccess = {
         is_oa: queries.access,
       };
+    }
+
+    if (queries.hidden !== undefined) {
+      const user = await this.userService.getUser({ id: userid });
+      const role = user.role;
+
+      const isHaveAccess = role
+        .map((r) => r.role)
+        .some((r) => [UserRole.ADMIN, UserRole.MODERATOR].indexOf(r) !== -1);
+
+      if (isHaveAccess) {
+        where.hidden = queries.hidden;
+      }
     }
 
     const works = (

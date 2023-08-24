@@ -1,7 +1,7 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { WorksService } from './works.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
-import { QueryDto } from './dtos/work-querys.dto';
+import { Queries } from './dtos/works-query.interface';
 
 @Controller('works')
 export class WorksController {
@@ -9,9 +9,18 @@ export class WorksController {
 
   @Get('')
   @UseGuards(AuthGuard)
-  async getWorks(@Query() queries: QueryDto, @Req() req) {
-    const works = await this.worksService.getAllWorks(queries);
+  async getWorks(@Query() queries: Queries, @Req() req) {
+    const user: {
+      login: string;
+      id: number;
+    } = req.user;
+
+    const works = await this.worksService.getAllWorks(queries, user.id);
 
     return works;
   }
+
+  @Patch('/:id')
+  @UseGuards(AuthGuard)
+  async updateWork() {}
 }

@@ -7,6 +7,7 @@ import { GuardsModule } from 'src/guards/guards.module';
 import { HttpModule } from '@nestjs/axios';
 import { OpenAlexModule } from '../download-works-modules/open-alex/open-alex.module';
 import { ScimagojrModule } from '../download-works-modules/scimagojr/scimagojr.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   providers: [WorksService],
@@ -17,6 +18,7 @@ import { ScimagojrModule } from '../download-works-modules/scimagojr/scimagojr.m
     HttpModule,
     OpenAlexModule,
     ScimagojrModule,
+    UserModule,
   ],
 })
 export class WorksModule {}

@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -9,7 +10,7 @@ import {
 export enum UserRole {
   ADMIN = 'ADMIN',
   MODERATOR = 'MODERATOR',
-  USER = 'User',
+  USER = 'USER',
 }
 
 @Entity()
@@ -35,7 +36,7 @@ export class User {
   })
   refreshToken: string;
 
-  @OneToMany(() => Roles, (roles) => roles.role)
+  @OneToMany(() => Roles, (roles) => roles.user)
   role: Roles[];
 }
 
@@ -51,5 +52,8 @@ export class Roles {
   role: UserRole;
 
   @ManyToOne(() => User, (user) => user.role)
+  @JoinColumn({
+    name: 'user_id',
+  })
   user: User;
 }

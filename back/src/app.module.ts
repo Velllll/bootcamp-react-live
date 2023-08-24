@@ -10,12 +10,10 @@ import { ScimagojrModule } from './modules/download-works-modules/scimagojr/scim
 import { AuthModule } from './modules/auth/auth.module';
 import { LoaderModule } from './modules/loader/loader.module';
 import { WorksModule } from './modules/works/works.module';
-import { ListsModule } from './modules/lists/lists.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
-    ListsModule,
-
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -27,6 +25,7 @@ import { ListsModule } from './modules/lists/lists.module';
     AuthModule,
     AuthModule,
     WorksModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
