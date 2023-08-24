@@ -2,6 +2,7 @@ version: "3"
 
 services:
   back-dev:
+    container_name: bootcamp-back-dev
     build:
       context: ./back
       target: dev
@@ -19,6 +20,7 @@ services:
       - db
 
   db:
+    container_name: bootcamp-db
     image: postgres:12-alpine
     environment:
       - POSTGRES_USER=${DB_USER}

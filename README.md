@@ -1,32 +1,13 @@
-# MineCite 
+# Bootcamp NestJS + React
 
-## Setup 
+## Setup environment
 
-create .env file 
+Set all properties in `.env` file
 
-`touch .env`
+Use `.env.example` as example
 
-`cat >> .env`
+## Development backend server local
 
-Fill .env file with: 
-<br>
-DB_NAME=api
-<br>
-DB_USER={USERNAME}
-<br>
-DB_PASSWORD={PASSWORD}
-<br>
-DB_HOST=db
-
-## Start in dev mode
-
-Start backend and bd
-`docker-compose up --build -d`
-
-<br>
-
-For start frontend `cd front` and `ng serve`
-
-## Start in prod 
-
-`docker-compose -f docker-compose-prod.yaml up -d --build`
+```bash
+  docker-compose up -d --build
+```
