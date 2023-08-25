@@ -23,12 +23,36 @@ export class UserService {
       },
       relations: {
         role: true,
+        userWorkCollection: true,
+      },
+      select: {
+        id: true,
+        login: true,
+        name: true,
       },
     });
 
     const { password, refreshToken, ...result } = user;
 
-    return result;
+    const roles = user.role.map((role) => {
+      return role.role;
+    });
+
+    return {
+      ...result,
+      role: roles,
+    };
+  }
+
+  async getUserReference(query: { login?: string; id?: number }) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        login: query.login,
+        id: query.id,
+      },
+    });
+
+    return user;
   }
 
   async getListOfUsers(queries: QueriesForListOfUsers) {
@@ -62,7 +86,10 @@ export class UserService {
       select: {
         id: true,
         login: true,
-        role: true,
+        role: {
+          role: true,
+          id: true,
+        },
         name: true,
       },
     });
@@ -75,7 +102,15 @@ export class UserService {
     };
 
     return {
-      users,
+      users: users.map((user) => {
+        const roles = user.role.map((role) => {
+          return role.role;
+        });
+        return {
+          ...user,
+          role: roles,
+        };
+      }),
       meta,
     };
   }

@@ -10,7 +10,7 @@ import {
   ValidationOptions,
 } from 'class-validator';
 
-export class Queries {
+export class Pages {
   @IsOptional()
   @Transform(({ value }) => {
     return value ? parseInt(value) : 1;
@@ -24,7 +24,9 @@ export class Queries {
   })
   @IsNumber()
   limit: number;
+}
 
+export class Queries extends Pages {
   @IsOptional()
   @IsString()
   lastname: string;
