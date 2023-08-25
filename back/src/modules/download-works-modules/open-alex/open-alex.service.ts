@@ -25,7 +25,7 @@ import {
   Work,
   OpenAccess,
   PrimaryLocation,
-} from 'src/typeorm/entitys/events.entity';
+} from 'src/typeorm/entitys/work.entity';
 import { In, Repository } from 'typeorm';
 
 @Injectable()

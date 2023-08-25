@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserWorkCollection } from './user-work-collection.entity';
 
 @Entity()
 export class Biblio {
@@ -168,6 +169,15 @@ export class Work {
     nullable: true,
   })
   lastUpdateBy: number;
+
+  @OneToMany(
+    () => UserWorkCollection,
+    (userWorkCollection) => userWorkCollection.work,
+    {
+      cascade: true,
+    },
+  )
+  userWorkCollection: UserWorkCollection[];
 }
 
 @Entity()

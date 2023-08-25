@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserWorkCollection } from './user-work-collection.entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -36,8 +37,16 @@ export class User {
   })
   refreshToken: string;
 
-  @OneToMany(() => Roles, (roles) => roles.user)
+  @OneToMany(() => Roles, (roles) => roles.user, {
+    cascade: true,
+  })
   role: Roles[];
+
+  @OneToMany(
+    () => UserWorkCollection,
+    (userWorkCollection) => userWorkCollection.user,
+  )
+  userWorkCollection: UserWorkCollection[];
 }
 
 @Entity()
@@ -51,7 +60,9 @@ export class Roles {
   })
   role: UserRole;
 
-  @ManyToOne(() => User, (user) => user.role)
+  @ManyToOne(() => User, (user) => user.role, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'user_id',
   })

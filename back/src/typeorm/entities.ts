@@ -5,8 +5,9 @@ import {
   Concept,
   OpenAccess,
   PrimaryLocation,
-} from './entitys/events.entity';
+} from './entitys/work.entity';
 import { Roles, User } from './entitys/user.entity';
+import { UserWorkCollection } from './entitys/user-work-collection.entity';
 
 const entities = [
   Work,
@@ -17,6 +18,7 @@ const entities = [
   PrimaryLocation,
   User,
   Roles,
+  UserWorkCollection,
 ];
 
 export default entities;

@@ -15,13 +15,7 @@ import { RoleGuard } from 'src/guards/role /role.guard';
 import { UserRole } from 'src/typeorm/entitys/user.entity';
 import { Request } from 'express';
 import { UpdateWorkDto } from './dtos/update.dto';
-
-type RequestWithUser = Request & {
-  user: {
-    login: string;
-    id: number;
-  };
-};
+import { RequestWithUser } from 'src/interfaces/request-user.interface';
 
 @Controller('works')
 export class WorksController {

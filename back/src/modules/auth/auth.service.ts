@@ -11,6 +11,7 @@ import { Roles, User, UserRole } from 'src/typeorm/entitys/user.entity';
 import { Repository } from 'typeorm';
 import { TokenService } from './token/token.service';
 import { Hash } from 'crypto';
+import { compareSync, hashSync } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +39,7 @@ export class AuthService {
     }
 
     //crypt password vi bycrypt
-    const passwordHash = password;
+    const passwordHash = hashSync(password, 7);
 
     const newUser: User = await this.usersRepository.save({
       login,
@@ -79,6 +80,10 @@ export class AuthService {
 
     if (!user) {
       throw new HttpException('User not found', 401);
+    }
+
+    if (!compareSync(password, user.password)) {
+      throw new HttpException('Password is incorrect', 401);
     }
 
     const tokens = await this.tokenService.generateTokens({

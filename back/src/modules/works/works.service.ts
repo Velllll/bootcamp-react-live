@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Work } from 'src/typeorm/entitys/events.entity';
+import { Work } from 'src/typeorm/entitys/work.entity';
 import {
   And,
   ArrayContains,
