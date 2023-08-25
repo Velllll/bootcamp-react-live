@@ -62,6 +62,7 @@ export class Roles {
 
   @ManyToOne(() => User, (user) => user.role, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinColumn({
     name: 'user_id',
