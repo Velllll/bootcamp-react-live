@@ -67,7 +67,7 @@ export class Queries extends Pages {
 
   @IsBoolean()
   @Transform(({ value }) => {
-    if (value !== undefined || value !== 'false' || value !== 'true') {
+    if (!(value === undefined || value === 'false' || value === 'true')) {
       throw new HttpException('must be true or false', 400);
     }
     return value === 'false' ? false : true;
@@ -77,7 +77,8 @@ export class Queries extends Pages {
 
   @IsBoolean()
   @Transform(({ value }) => {
-    if (value !== undefined || value !== 'false' || value !== 'true') {
+    console.log(typeof value);
+    if (!(value === undefined || value === 'false' || value === 'true')) {
       throw new HttpException('must be true or false', 400);
     }
     return value === 'false' ? false : true;

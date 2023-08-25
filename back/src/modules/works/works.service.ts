@@ -35,7 +35,12 @@ export class WorksService {
     if (!queries.page) queries.page = 1;
     if (!queries.limit) queries.limit = 10;
 
+    const user = await this.userService.getUser({ id: userid });
+
     const where: any = {};
+
+    if (queries.hidden === undefined && user.role.length === 1)
+      where.hidden = false;
 
     if (queries.lastname) {
       where.authorships = {
@@ -100,7 +105,6 @@ export class WorksService {
     }
 
     if (queries.hidden !== undefined) {
-      const user = await this.userService.getUser({ id: userid });
       const role = user.role;
 
       const isHaveAccess = role.some(
@@ -111,6 +115,8 @@ export class WorksService {
         where.hidden = queries.hidden;
       }
     }
+
+    console.log(where);
 
     const works = (
       await this.worksRepository.find({
