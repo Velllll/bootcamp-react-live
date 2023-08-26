@@ -34,17 +34,33 @@
       li {
         margin-right: 20px;
         list-style: none;
+        position: relative;
       }
 
       a {
         text-decoration: none;
         color: #000;
+        font-size: 20px;
       }
 
       .logo {
-        font-size: 20px;
+        font-size: 30px;
         font-weight: 500;
         margin-right: 20px;
+      }
+
+      .number {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        border-radius: 50%;
+        color: white;
+        text-align: center;
+        background: black;
+        position: absolute;
+        right: -20px;
+        top: -10px;
+        font-size: 8px;
       }
     </style>
   </head>
@@ -56,7 +72,7 @@
           <li><a href="/admin">Admin panel</a></li>
           <li>
             <a href="/collection">Collection</a>
-            <span>4</span>
+            <span class="number">133</span>
           </li>
         </ul>
 
